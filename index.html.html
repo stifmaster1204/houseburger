@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>EL ARROYITO - Menú</title>
+<style>
+:root{
+  --bg:#070808; --card:#0f1011; --muted:#c2c2c2;
+  --accent:#ff2f4a; --neon:#ffd86b; --glass:rgba(255,255,255,0.04);
+  font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+body{margin:0;background:linear-gradient(#050506,#0a0a0b);color:#fff}
+.wrap{max-width:980px;margin:18px auto;padding:14px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:84px;height:84px;border-radius:12px;background:linear-gradient(135deg,#0a0a0a,#161616);display:flex;align-items:center;justify-content:center;color:var(--neon);font-weight:900;cursor:pointer;overflow:hidden}
+.logo img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+h1{margin:0;font-size:20px}
+.slogan{color:var(--muted);font-size:13px;margin-top:6px}
+.phone{color:var(--muted);text-align:right}
+.menu-section{margin-top:18px}
+.product{display:flex;gap:12px;align-items:center;background:var(--card);padding:12px;border-radius:10px;margin-bottom:10px;border:1px solid var(--glass)}
+.imgthumb{width:96px;height:72px;border-radius:8px;background:#101010;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;overflow:hidden}
+.imgthumb img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+.product-info{flex:1}
+.title-row{display:flex;justify-content:space-between;align-items:center}
+.desc{color:var(--muted);font-size:13px;margin-top:6px}
+.actions{display:flex;gap:8px;align-items:center;margin-top:10px}
+button.btn{background:var(--accent);border:none;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.05);color:var(--muted);padding:8px 10px;border-radius:8px;cursor:pointer}
+.qty{width:48px;text-align:center;border-radius:8px;padding:8px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03)}
+.cart{position:fixed;right:14px;bottom:14px;width:360px;max-width:94%;background:linear-gradient(#0b0b0b,#0c0c0c);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+.cart h4{margin:0 0 10px 0}
+.line{display:flex;justify-content:space-between;margin:6px 0;color:var(--muted)}
+input,textarea{width:100%;padding:8px;margin-top:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#fff}
+.modal{display:none;position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.75);align-items:center;justify-content:center}
+.modal .box{background:#0e0e0f;padding:16px;border-radius:10px;width:94%;max-width:560px}
+footer{text-align:center;margin:70px 0 20px;color:var(--muted);font-size:13px}
+.admin-panel{display:none;position:fixed;right:10px;top:10px;background:var(--card);padding:20px;border-radius:12px;overflow-y:auto;max-height:90%;box-shadow:0 0 10px rgba(0,0,0,0.6);}
+.admin-product{display:flex;flex-direction:column;gap:6px;border:1px solid var(--glass);padding:10px;border-radius:6px;margin-bottom:8px;background:rgba(255,255,255,0.01)}
+.admin-product img{width:100%;height:60px;object-fit:cover;border-radius:4px;}
+.admin-section{margin-bottom:10px;}
+.small{font-size:13px;color:var(--muted)}
+.row{display:flex;gap:8px}
+@media(max-width:760px){ .cart{left:12px;right:12px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="brand">
+      <div id="logoTap" class="logo" title="Toca 3 veces para editar">ARROYITO</div>
+      <div>
+        <h1 id="bizName">EL ARROYITO BURGER HOUSE</h1>
+        <div class="slogan" id="bizSlogan">SABOR QUE ROMPE EL HAMBRE</div>
+      </div>
+    </div>
+    <div class="phone">
+      <div>Pedidos por WhatsApp</div>
+      <div style="margin-top:6px"><strong id="bizPhone">+57 311 707 1974</strong></div>
+    </div>
+  </div>
+
+  <div id="menuRoot"></div>
+
+  <footer>EL ARROYITO BURGER HOUSE • SABOR QUE ROMPE EL HAMBRE</footer>
+</div>
+
+<!-- carrito -->
+<div class="cart" id="cartBox">
+  <h4 style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" id="cartHeader">
+    Tu pedido 
+    <span id="toggleCart" style="font-weight:900;font-size:18px;">▼</span>
+  </h4>
+  <div id="cartLines"></div>
+  <div id="cartTotal" style="font-weight:900;margin-top:8px">Total: $0</div>
+
+  <input id="clientName" placeholder="Tu nombre"/>
+  <input id="clientPhone" placeholder="Teléfono (ej: 3117071974)"/>
+  <input id="clientAddress" placeholder="Dirección (opcional)"/>
+
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <button class="btn" id="previewBtn">Ver pedido</button>
+    <button class="btn ghost" id="clearBtn">Vaciar</button>
+  </div>
+  <div style="margin-top:8px;color:var(--muted);font-size:13px">Toca el logo 3 veces para opciones avanzadas.</div>
+</div>
+
+<!-- modal resumen -->
+<div id="modal" class="modal">
+  <div class="box">
+    <h3>Resumen del pedido</h3>
+    <div id="modalLines"></div>
+    <div id="modalTotal" style="font-weight:900;margin-top:8px"></div>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button class="btn" id="sendWhatsLocal">Enviar por WhatsApp</button>
+      <button class="btn ghost" id="closeModal">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- panel admin -->
+<div class="admin-panel" id="adminPanel">
+  <h4>Modo Administrador</h4>
+  <div class="admin-section">
+    <label class="small">Logo del negocio</label>
+    <input type="file" id="adminBizLogo" accept="image/*">
+    <label class="small">Nombre del negocio</label>
+    <input id="adminBizName">
+    <label class="small">Slogan</label>
+    <input id="adminBizSlogan">
+    <label class="small">Teléfono</label>
+    <input id="adminBizPhone">
+  </div>
+  <div class="admin-section" id="adminProductsSection">
+    <h4>Productos</h4>
+    <div id="adminProductsList"></div>
+    <button class="btn" id="addProductBtn">Agregar producto</button>
+  </div>
+  <div style="margin-top:8px;display:flex;gap:8px">
+    <button class="btn" id="saveAdminBtn">Guardar cambios</button>
+    <button class="btn ghost" id="closeAdminBtn">Cerrar</button>
+  </div>
+</div>
+
+<script>
+/* --- Keys --- */
+const STORAGE_MENU_KEY = 'MENU';
+const STORAGE_CART_KEY = 'CART';
+const STORAGE_CART_EXPANDED_KEY = 'CART_EXPANDED';
+
+/* --- Load or default --- */
+let MENU = JSON.parse(localStorage.getItem(STORAGE_MENU_KEY)) || {
+  business: "EL ARROYITO BURGER HOUSE",
+  logo: "",
+  slogan: "SABOR QUE ROMPE EL HAMBRE",
+  phone: "573117071974",
+  currencySymbol: "$",
+  products: [
+    {id:'h1',name:'Clásica',desc:'Carne, queso, lechuga, tomate',price:18000, category:'Hamburguesas', img:''},
+    {id:'h2',name:'BBQ House',desc:'Carne ahumada, cebolla caramelizada, salsa BBQ',price:23000, category:'Hamburguesas', img:''},
+    {id:'h3',name:'Pollo Crispy',desc:'Filete crocante, queso cheddar, mayonesa',price:20000, category:'Hamburguesas', img:''},
+    {id:'a1',name:'Papas fritas',desc:'Porción mediana',price:8000, category:'Acompañamientos', img:''},
+    {id:'a2',name:'Aros de cebolla',desc:'6 unidades',price:7000, category:'Acompañamientos', img:''},
+    {id:'b1',name:'Gaseosa 350ml',desc:'Coca-Cola, Sprite, Pepsi',price:4000, category:'Bebidas', img:''},
+    {id:'b2',name:'Malteada',desc:'Chocolate o vainilla',price:9000, category:'Bebidas', img:''}
+  ]
+};
+
+let cart = JSON.parse(localStorage.getItem(STORAGE_CART_KEY)) || {};
+let cartExpanded = (localStorage.getItem(STORAGE_CART_EXPANDED_KEY) === null) ? true : (localStorage.getItem(STORAGE_CART_EXPANDED_KEY) === 'true');
+
+/* --- Helpers --- */
+function fmt(v){ return MENU.currencySymbol + Number(v).toLocaleString(); }
+function saveMenu(){ try{ localStorage.setItem(STORAGE_MENU_KEY, JSON.stringify(MENU)); }catch(e){ console.warn('No se pudo guardar MENU:', e); } }
+function saveCart(){ try{ localStorage.setItem(STORAGE_CART_KEY, JSON.stringify(cart)); }catch(e){ console.warn('No se pudo guardar CART:', e); } }
+function saveCartExpanded(){ localStorage.setItem(STORAGE_CART_EXPANDED_KEY, cartExpanded ? 'true' : 'false'); }
+
+/* --- Render menu --- */
+function renderMenu(){
+  document.getElementById('bizName').innerText = MENU.business;
+  document.getElementById('bizSlogan').innerText = MENU.slogan;
+  document.getElementById('bizPhone').innerText = '+' + MENU.phone;
+
+  const logoEl = document.getElementById('logoTap');
+  // keep the same element, just change inner content (so click listener stays)
+  if(MENU.logo){
+    logoEl.innerHTML = `<img src="${MENU.logo}" alt="logo">`;
+  } else {
+    logoEl.innerHTML = 'ARROYITO';
+  }
+
+  const root = document.getElementById('menuRoot'); root.innerHTML = '';
+  const groups = {};
+  MENU.products.forEach(p=>{
+    if(!groups[p.category]) groups[p.category]=[];
+    groups[p.category].push(p);
+  });
+
+  for(const cat in groups){
+    const sec = document.createElement('section'); sec.className = 'menu-section';
+    sec.innerHTML = `<h3 style="color:var(--neon)">${cat}</h3>`;
+    groups[cat].forEach(p=>{
+      const item = document.createElement('div'); item.className='product';
+      const imgThumb = document.createElement('div'); imgThumb.className = 'imgthumb';
+      if(p.img){
+        const im = document.createElement('img'); im.src = p.img; imgThumb.appendChild(im);
+      } else {
+        imgThumb.textContent = 'Img';
+      }
+      const info = document.createElement('div'); info.className='product-info';
+      info.innerHTML = `<div class="title-row"><strong>${p.name}</strong><div style="color:var(--accent);font-weight:900">${fmt(p.price)}</div></div>
+                        <div class="desc">${p.desc}</div>`;
+      const actions = document.createElement('div'); actions.className='actions';
+      const btnDec = document.createElement('button'); btnDec.className='ghost'; btnDec.textContent='-'; btnDec.onclick = ()=>decQty(p.id);
+      const qty = document.createElement('input'); qty.className='qty'; qty.id = 'qty_'+p.id; qty.value='0'; qty.readOnly = true;
+      const btnInc = document.createElement('button'); btnInc.className='ghost'; btnInc.textContent='+'; btnInc.onclick = ()=>incQty(p.id);
+      const btnAdd = document.createElement('button'); btnAdd.className='btn'; btnAdd.textContent='Agregar'; btnAdd.onclick = ()=>addToCart(p.id);
+      actions.appendChild(btnDec); actions.appendChild(qty); actions.appendChild(btnInc); actions.appendChild(btnAdd);
+      info.appendChild(actions);
+      item.appendChild(imgThumb); item.appendChild(info);
+      sec.appendChild(item);
+    });
+    root.appendChild(sec);
+  }
+  renderCart();
+}
+
+/* --- Qty controls --- */
+function incQty(id){ const el=document.getElementById('qty_'+id); if(!el) return; el.value = parseInt(el.value||0)+1; }
+function decQty(id){ const el=document.getElementById('qty_'+id); if(!el) return; el.value = Math.max(0, parseInt(el.value||0)-1); }
+
+/* --- Cart logic --- */
+function addToCart(id){
+  const q = parseInt(document.getElementById('qty_'+id).value||0);
+  if(q<=0){ alert('Selecciona al menos 1'); return; }
+  cart[id] = (cart[id]||0) + q;
+  document.getElementById('qty_'+id).value = 0;
+  saveCart();
+  renderCart();
+}
+
+function renderCart(){
+  const lines = document.getElementById('cartLines'); lines.innerHTML = '';
+  let total = 0;
+  for(const id in cart){
+    if(!cart[id]||cart[id]<=0) continue;
+    const p = MENU.products.find(x=>x.id===id);
+    if(!p) continue;
+    const sub = p.price * cart[id]; total += sub;
+    const div = document.createElement('div'); div.className='line';
+    div.innerHTML = `<div>${p.name} x ${cart[id]}</div><div>${fmt(sub)}</div>`;
+    const rem = document.createElement('button'); rem.textContent='-'; rem.style.marginLeft='8px';
+    rem.onclick = ()=>{
+      cart[id]--;
+      if(cart[id]<=0) delete cart[id];
+      saveCart();
+      renderCart();
+    };
+    div.appendChild(rem);
+    lines.appendChild(div);
+  }
+  document.getElementById('cartTotal').innerText = 'Total: ' + fmt(total);
+
+  // apply collapse state
+  const cartLinesDiv = document.getElementById('cartLines');
+  const cartTotalDiv = document.getElementById('cartTotal');
+  const cartInputs = [document.getElementById('clientName'), document.getElementById('clientPhone'), document.getElementById('clientAddress')];
+  const cartButtons = [document.getElementById('previewBtn'), document.getElementById('clearBtn')];
+  cartLinesDiv.style.display = cartExpanded ? 'block' : 'none';
+  cartTotalDiv.style.display = cartExpanded ? 'block' : 'none';
+  cartInputs.forEach(inp => inp.style.display = cartExpanded ? 'block' : 'none');
+  cartButtons.forEach(btn => btn.style.display = cartExpanded ? 'inline-block' : 'none');
+  document.getElementById('toggleCart').textContent = cartExpanded ? '▼' : '▲';
+}
+
+/* --- Buttons --- */
+document.getElementById('clearBtn').addEventListener('click', ()=>{
+  cart = {}; saveCart(); renderCart();
+});
+
+/* Preview modal */
+document.getElementById('previewBtn').addEventListener('click', ()=>{
+  if(Object.keys(cart).length===0){ alert('Tu carrito está vacío'); return; }
+  const name = document.getElementById('clientName').value.trim();
+  const phone = document.getElementById('clientPhone').value.trim();
+  if(!name || !phone){ alert('Ingresa nombre y teléfono'); return; }
+  const lines = document.getElementById('modalLines'); lines.innerHTML=''; let total=0;
+  for(const id in cart){
+    const p = MENU.products.find(x=>x.id===id);
+    if(!p) continue;
+    const sub = p.price * cart[id]; total += sub;
+    const d = document.createElement('div'); d.className='line'; d.innerHTML = `<div>${p.name} x ${cart[id]}</div><div>${fmt(sub)}</div>`;
+    lines.appendChild(d);
+  }
+  document.getElementById('modalTotal').innerText = 'Total: ' + fmt(total);
+  document.getElementById('modal').style.display = 'flex';
+});
+
+document.getElementById('closeModal').addEventListener('click', ()=>{ document.getElementById('modal').style.display = 'none'; });
+
+/* Send to WhatsApp */
+document.getElementById('sendWhatsLocal').addEventListener('click', ()=>{
+  const name=document.getElementById('clientName').value.trim();
+  const phone=document.getElementById('clientPhone').value.trim();
+  const addr=document.getElementById('clientAddress').value.trim()||'-';
+  let message = `Hola ${MENU.business} 🍔%0AQuiero hacer este pedido:%0A`;
+  let total=0;
+  for(const id in cart){
+    const p = MENU.products.find(x=>x.id===id);
+    if(!p) continue;
+    const sub = p.price * cart[id]; total += sub;
+    message += `${p.name} x${cart[id]} = ${MENU.currencySymbol}${sub.toLocaleString()}%0A`;
+  }
+  message += `Total: ${MENU.currencySymbol}${total.toLocaleString()}%0A%0ANombre: ${encodeURIComponent(name)}%0ATeléfono: ${encodeURIComponent(phone)}%0ADirección: ${encodeURIComponent(addr)}`;
+  const wa = `https://wa.me/${MENU.phone}?text=${message}`;
+  window.open(wa,'_blank');
+});
+
+/* --- Admin open (logo tap x3) --- */
+(function logoTap(){
+  const l = document.getElementById('logoTap'); let taps=0,last=0;
+  l.addEventListener('click', ()=>{
+    const now = Date.now();
+    if(now-last < 800) taps++; else taps=1;
+    last = now;
+    if(taps>=3){
+      taps=0;
+      const key = prompt('Ingresa clave admin:');
+      if(key === '1204') openAdmin();
+      else alert('Clave incorrecta');
+    }
+  });
+})();
+
+function openAdmin(){
+  const panel = document.getElementById('adminPanel');
+  panel.style.display = 'block';
+  document.getElementById('adminBizName').value = MENU.business;
+  document.getElementById('adminBizSlogan').value = MENU.slogan;
+  document.getElementById('adminBizPhone').value = MENU.phone;
+  renderAdminProducts();
+}
+
+/* Logo upload (main) */
+document.getElementById('adminBizLogo').addEventListener('change', (e)=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    MENU.logo = ev.target.result;
+    saveMenu();
+    renderMenu();
+  };
+  reader.readAsDataURL(file);
+});
+
+/* --- ADMIN PRODUCTS --- */
+function renderAdminProducts(){
+  const list = document.getElementById('adminProductsList');
+  list.innerHTML = '';
+
+  MENU.products.forEach((p, i)=>{
+    const div = document.createElement('div'); div.className = 'admin-product';
+
+    // preview image (if any)
+    if(p.img){
+      const img = document.createElement('img'); img.src = p.img; div.appendChild(img);
+    }
+
+    // Nombre
+    const nameInput = document.createElement('input'); nameInput.placeholder = 'Nombre'; nameInput.value = p.name;
+    // Descripción
+    const descInput = document.createElement('input'); descInput.placeholder = 'Descripción'; descInput.value = p.desc;
+    // Precio
+    const priceInput = document.createElement('input'); priceInput.type='number'; priceInput.placeholder='Precio'; priceInput.value = p.price;
+    // Categoría
+    const catInput = document.createElement('input'); catInput.placeholder='Categoría'; catInput.value = p.category;
+    // Imagen URL
+    const imgInput = document.createElement('input'); imgInput.placeholder='URL Imagen'; imgInput.value = p.img;
+
+    // change listeners: update MENU and persist immediately
+    nameInput.addEventListener('input', (e)=>{ MENU.products[i].name = e.target.value; saveMenu(); renderMenu(); });
+    descInput.addEventListener('input', (e)=>{ MENU.products[i].desc = e.target.value; saveMenu(); renderMenu(); });
+    priceInput.addEventListener('input', (e)=>{ MENU.products[i].price = parseFloat(e.target.value) || 0; saveMenu(); renderMenu(); });
+    catInput.addEventListener('input', (e)=>{ MENU.products[i].category = e.target.value; saveMenu(); renderMenu(); });
+    imgInput.addEventListener('input', (e)=>{ MENU.products[i].img = e.target.value; saveMenu(); renderMenu(); });
+
+    // delete button
+    const delBtn = document.createElement('button'); delBtn.className='btn ghost'; delBtn.textContent='Eliminar';
+    delBtn.addEventListener('click', ()=>{
+      if(!confirm('¿Eliminar producto?')) return;
+      MENU.products.splice(i,1);
+      saveMenu();
+      renderAdminProducts();
+      renderMenu();
+    });
+
+    // append inputs in order
+    div.appendChild(nameInput);
+    div.appendChild(descInput);
+    div.appendChild(priceInput);
+    div.appendChild(catInput);
+    div.appendChild(imgInput);
+    div.appendChild(delBtn);
+
+    list.appendChild(div);
+  });
+}
+
+/* add product */
+document.getElementById('addProductBtn').addEventListener('click', ()=>{
+  const newProd = { id: 'p' + Date.now(), name: 'Nuevo producto', desc: 'Descripción', price: 0, category: 'Sin categoría', img: '' };
+  MENU.products.push(newProd);
+  saveMenu();
+  renderAdminProducts();
+  renderMenu();
+});
+
+/* Save admin (also closes panel) */
+document.getElementById('saveAdminBtn').addEventListener('click', ()=>{
+  MENU.business = document.getElementById('adminBizName').value;
+  MENU.slogan = document.getElementById('adminBizSlogan').value;
+  MENU.phone = document.getElementById('adminBizPhone').value;
+  saveMenu();
+  renderMenu();
+  document.getElementById('adminPanel').style.display = 'none';
+});
+
+/* Close admin without changing stored values (but UI already wrote into MENU while typing) */
+document.getElementById('closeAdminBtn').addEventListener('click', ()=>{
+  // make sure current input values are saved as well
+  MENU.business = document.getElementById('adminBizName').value;
+  MENU.slogan = document.getElementById('adminBizSlogan').value;
+  MENU.phone = document.getElementById('adminBizPhone').value;
+  saveMenu();
+  renderMenu();
+  document.getElementById('adminPanel').style.display = 'none';
+});
+
+/* --- Cart collapse toggle --- */
+document.getElementById('cartHeader').addEventListener('click', ()=>{
+  cartExpanded = !cartExpanded;
+  saveCartExpanded();
+  renderCart();
+});
+
+/* --- Init --- */
+renderMenu();
+</script>
+</body>
+</html>
+
